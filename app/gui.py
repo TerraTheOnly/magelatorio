@@ -21,8 +21,6 @@ from app.pdf_report import buildReport
 
 
 class ReportApp:
-    """Assistente: passo 1 = dados e arquivos; passos seguintes = prints de cada atividade."""
-
     def __init__(self, root):
         self.root = root
         self.activityList = []
@@ -80,7 +78,7 @@ class ReportApp:
             entry.grid(row=rowIndex, column=1, sticky="ew", pady=3)
             self.entryByField[fieldKey] = entry
 
-        frameFiles = ttk.LabelFrame(self.frameSetup, text="Atividades (arquivos de código), na ordem em que aparecerão no relatório", padding=10)
+        frameFiles = ttk.LabelFrame(self.frameSetup, text="Arquivos de código-fonte anexados:", padding=10)
         frameFiles.pack(fill="both", expand=True, pady=(12, 0))
         frameFiles.columnconfigure(0, weight=1)
         frameFiles.rowconfigure(0, weight=1)
@@ -120,7 +118,7 @@ class ReportApp:
         self.textCode.configure(yscrollcommand=scrollbarVertical.set, xscrollcommand=scrollbarHorizontal.set)
         panedBody.add(frameCode, weight=1)
 
-        frameScreenshots = ttk.LabelFrame(panedBody, text="Prints do console (quantos quiser)", padding=6)
+        frameScreenshots = ttk.LabelFrame(panedBody, text="Imagens", padding=6)
         frameScreenshots.columnconfigure(0, weight=1)
         frameScreenshots.rowconfigure(2, weight=1)
         self.listboxScreenshots = tk.Listbox(frameScreenshots, selectmode="extended", activestyle="none", height=6)
@@ -132,13 +130,13 @@ class ReportApp:
         for buttonText, buttonCommand in (
             ("Adicionar imagens…", self.addScreenshotFiles),
             ("Colar da área de transferência (Ctrl+V)", self.pasteScreenshot),
-            ("Remover", self.removeScreenshots),
+            ("Remover selecionadas", self.removeScreenshots),
             ("↑", lambda: self.moveScreenshots(-1)),
             ("↓", lambda: self.moveScreenshots(1)),
         ):
             ttk.Button(frameButtons, text=buttonText, command=buttonCommand).pack(side="left", padx=(0, 4))
 
-        self.labelPreview = ttk.Label(frameScreenshots, text="Selecione um print para visualizar", anchor="center")
+        self.labelPreview = ttk.Label(frameScreenshots, text="Selecione uma imagem para visualizar", anchor="center")
         self.labelPreview.grid(row=2, column=0, sticky="nsew")
         panedBody.add(frameScreenshots, weight=1)
 
@@ -169,7 +167,7 @@ class ReportApp:
 
     def goNext(self):
         if self.stepIndex == 0 and not self.activityList:
-            messagebox.showwarning("Nenhuma atividade", "Adicione pelo menos um arquivo de código para continuar.")
+            messagebox.showwarning("Nenhum arquivo anexado", "Adicione pelo menos um arquivo para continuar.")
             return
         if self.stepIndex == len(self.activityList):
             self.generateReport()
@@ -193,7 +191,7 @@ class ReportApp:
 
     def addActivityFiles(self):
         pathList = filedialog.askopenfilenames(
-            title="Escolha os arquivos das atividades",
+            title="Selecione os arquivos",
             filetypes=[("Arquivos de código", SOURCE_FILE_PATTERN), ("Todos os arquivos", "*.*")],
         )
         knownPathSet = {os.path.abspath(activity.sourcePath) for activity in self.activityList}
@@ -240,7 +238,7 @@ class ReportApp:
         selectionList = self.listboxScreenshots.curselection()
         if not selectionList:
             self.previewPhoto = None
-            self.labelPreview.configure(image="", text="Selecione um print para visualizar")
+            self.labelPreview.configure(image="", text="Selecione uma imagem para visualizar")
             return
         thumbnail = self.currentActivity().screenshotList[selectionList[0]].image.convert("RGB")
         thumbnail.thumbnail((PREVIEW_MAX_WIDTH, PREVIEW_MAX_HEIGHT))
@@ -249,7 +247,7 @@ class ReportApp:
 
     def addScreenshotFiles(self):
         pathList = filedialog.askopenfilenames(
-            title="Escolha os prints do console",
+            title="Escolha as imagens",
             filetypes=[("Imagens", "*.png *.jpg *.jpeg *.bmp *.gif *.webp"), ("Todos os arquivos", "*.*")],
         )
         failedList = []
@@ -287,9 +285,9 @@ class ReportApp:
         else:
             newScreenshotList = []
         if not newScreenshotList:
-            messagebox.showinfo(
+            messagebox.showwarning(
                 "Nada para colar",
-                "Não há imagem na área de transferência.\n\n"
+                "Não há imagem na área de transferência.\n"
                 "Copie um recorte da tela (Windows: Win+Shift+S; macOS: Cmd+Ctrl+Shift+4) e tente de novo.",
             )
             return
@@ -322,8 +320,8 @@ class ReportApp:
         missingNameList = [os.path.basename(activity.sourcePath) for activity in self.activityList if not activity.screenshotList]
         if missingNameList:
             shouldContinue = messagebox.askyesno(
-                "Atividades sem print",
-                "Estas atividades não têm nenhum print:\n\n" + "\n".join(missingNameList) + "\n\nGerar o PDF mesmo assim?",
+                "Arquivos sem imagens",
+                "Estes arquivos não têm nenhuma imagem anexada:\n\n" + "\n".join(missingNameList) + "\n\nGerar o relatório mesmo assim?",
             )
             if not shouldContinue:
                 return

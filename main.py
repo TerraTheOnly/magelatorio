@@ -3,7 +3,6 @@ import traceback
 
 
 def enableHighDpi():
-    """Nitidez em telas de alta resolução no Windows."""
     try:
         import ctypes
         ctypes.windll.shcore.SetProcessDpiAwareness(1)
@@ -12,14 +11,13 @@ def enableHighDpi():
 
 
 def reportStartupError(message):
-    """Mostra o erro numa caixa de diálogo (útil no .exe sem console) e também no terminal."""
     print(message, file=sys.stderr)
     try:
         import tkinter
         from tkinter import messagebox
         root = tkinter.Tk()
         root.withdraw()
-        messagebox.showerror("Gerador de Relatório", message)
+        messagebox.showerror("Magelatório", message)
         root.destroy()
     except Exception:
         pass
