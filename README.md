@@ -14,8 +14,8 @@ Aceita C, C++, Java, Python, entre várias outras linguagens. A lista completa d
 3. Após adicionar fotos em todos os códigos, você pode gerar o PDF em seu diretório de preferência. (Caso haja algum código sem imagens anexadas, o programa irá avisar o usuário, mas esse aviso pode ser ignorado.)
 4. Pronto! Seu relatório está pronto para ser enviado.
 
-### Exemplo de Resultado:
-[relatorio_teste.pdf](https://github.com/user-attachments/files/33990939/relatorio_teste.pdf)
+[**Relatório de Exemplo**](https://github.com/user-attachments/files/34148341/relatorio_codigos.pdf)
+
 
 ## Instalação
 
