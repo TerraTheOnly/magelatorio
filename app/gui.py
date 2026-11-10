@@ -6,6 +6,7 @@ from tkinter import filedialog, messagebox, ttk
 from PIL import Image, ImageGrab, ImageTk
 
 from app.config import (
+    REPOSITORY_LINK,
     PREVIEW_MAX_HEIGHT,
     PREVIEW_MAX_WIDTH,
     REPORT_DEFAULT_TITLE,
@@ -39,6 +40,10 @@ class ReportApp:
         self.buildSetupFrame()
         self.buildActivityFrame()
         self.showStep()
+
+        messagebox.showinfo(
+            "Bem-vindo ao " + WINDOW_TITLE,
+            "Bem-vindo ao " + WINDOW_TITLE + "! Se achou o programa útil, encontrou algum bug ou quer dar alguma sugestão, visite o repositório completo em: \n\n" + REPOSITORY_LINK)
 
     # ---- erros inesperados (no .exe não há console para ver o traceback)
 

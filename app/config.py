@@ -4,6 +4,8 @@ from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import cm
 
+REPOSITORY_LINK = "github.com/TerraTheOnly/magelatorio"
+
 REPORT_DEFAULT_TITLE = "Relatório"
 
 PAGE_SIZE = A4
