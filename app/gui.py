@@ -16,7 +16,7 @@ from app.config import (
     WINDOW_MIN_WIDTH,
     WINDOW_TITLE,
 )
-from app.helpers import moveItems, naturalSortKey, openFile, readSourceText
+from app.helpers import buildActivityTitle, moveItems, naturalSortKey, openFile, readSourceText
 from app.models import Activity, ReportInfo, Screenshot
 from app.pdf_report import buildReport
 
@@ -30,7 +30,7 @@ class ReportApp:
         self.previewPhoto = None
 
         root.title(WINDOW_TITLE)
-        root.iconbitmap('icon_mini.ico')
+        # root.iconbitmap('icon_mini.ico')
         # root.iconbitmap("assets/icon_mini.ico")
         root.geometry(WINDOW_GEOMETRY)
         root.minsize(WINDOW_MIN_WIDTH, WINDOW_MIN_HEIGHT)
@@ -110,6 +110,15 @@ class ReportApp:
         self.labelActivityTitle = ttk.Label(self.frameActivity, font=("TkDefaultFont", 13, "bold"))
         self.labelActivityTitle.pack(anchor="w", pady=(0, 8))
 
+        frameName = ttk.Frame(self.frameActivity)
+        frameName.pack(fill="x", pady=(0, 8))
+        frameName.columnconfigure(1, weight=1)
+        ttk.Label(frameName, text="Nome da atividade (opcional):").grid(row=0, column=0, sticky="w", padx=(0, 10))
+        self.activityNameVariable = tk.StringVar()
+        self.activityNameVariable.trace_add("write", lambda *args: self.saveActivityName())
+        self.entryActivityName = ttk.Entry(frameName, textvariable=self.activityNameVariable)
+        self.entryActivityName.grid(row=0, column=1, sticky="ew")
+
         panedBody = ttk.PanedWindow(self.frameActivity, orient="horizontal")
         panedBody.pack(fill="both", expand=True)
 
@@ -149,9 +158,19 @@ class ReportApp:
 
         for sequence in ("<Control-v>", "<Command-v>"):
             try:
-                self.root.bind(sequence, lambda event: self.pasteScreenshot() if self.stepIndex > 0 else None)
+                #self.root.bind(sequence, lambda event: self.pasteScreenshot() if self.stepIndex > 0 else None)
+                self.root.bind(sequence, self.handlePasteShortcut)
             except tk.TclError:
                 pass
+
+    def handlePasteShortcut(self, event):
+        # no campo de nome, Ctrl+V cola texto normalmente
+        if self.stepIndex > 0 and event.widget is not self.entryActivityName:
+            self.pasteScreenshot()
+
+    def saveActivityName(self):
+        if self.stepIndex > 0:
+            self.currentActivity().customName = self.activityNameVariable.get().strip()
 
     # ---- navegação
 
@@ -230,6 +249,7 @@ class ReportApp:
         self.textCode.delete("1.0", "end")
         self.textCode.insert("1.0", sourceText)
         self.textCode.configure(state="disabled")
+        self.activityNameVariable.set(activity.customName)
         self.refreshScreenshotListbox()
 
     def refreshScreenshotListbox(self, selectedIndexList=()):
@@ -324,7 +344,12 @@ class ReportApp:
         )
 
     def generateReport(self):
-        missingNameList = [os.path.basename(activity.sourcePath) for activity in self.activityList if not activity.screenshotList]
+        #missingNameList = [os.path.basename(activity.sourcePath) for activity in self.activityList if not activity.screenshotList]
+        missingNameList = [
+            buildActivityTitle(activityNumber, activity)
+            for activityNumber, activity in enumerate(self.activityList, start=1)
+            if not activity.screenshotList
+        ]
         if missingNameList:
             shouldContinue = messagebox.askyesno(
                 "Arquivos sem imagens",

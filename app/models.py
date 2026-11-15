@@ -15,6 +15,7 @@ class Screenshot:
 class Activity:
     sourcePath: str
     screenshotList: list = field(default_factory=list)
+    customName: str = ""
 
 
 @dataclass

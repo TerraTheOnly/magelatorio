@@ -4,8 +4,13 @@ import subprocess
 import sys
 from xml.sax.saxutils import escape
 
-from app.config import CONTROL_CHARACTER_PATTERN, SOURCE_ENCODING_LIST
-
+#from app.config import CONTROL_CHARACTER_PATTERN, SOURCE_ENCODING_LIST
+from app.config import (
+    ACTIVITY_DEFAULT_LABEL,
+    ACTIVITY_TITLE_SEPARATOR,
+    CONTROL_CHARACTER_PATTERN,
+    SOURCE_ENCODING_LIST,
+)
 
 def resourcePath(relativePath):
     """Caminho de um recurso (assets/...), tanto rodando o script quanto no .exe do PyInstaller."""
@@ -71,3 +76,10 @@ def openFile(filePath):
         subprocess.run(["open", filePath], check=False)
     else:
         subprocess.run(["xdg-open", filePath], check=False)
+
+def buildActivityTitle(activityNumber, activity):
+    """\"nome - arquivo.c\" se houver nome customizado; senão \"Atividade N - arquivo.c\"."""
+    fileName = os.path.basename(activity.sourcePath)
+    customName = activity.customName.strip()
+    prefix = customName or f"{ACTIVITY_DEFAULT_LABEL} {activityNumber}"
+    return f"{prefix}{ACTIVITY_TITLE_SEPARATOR}{fileName}"

@@ -46,7 +46,7 @@ from app.config import (
     SYSTEM_FONT_PATH_LIST,
     TAB_WIDTH,
 )
-from app.helpers import cleanParagraphText, readSourceText, resourcePath, sanitizeText
+from app.helpers import buildActivityTitle, cleanParagraphText, readSourceText, resourcePath, sanitizeText
 
 
 def registerCodeFont():
@@ -153,10 +153,11 @@ def buildImageFlowable(image, maxWidth, maxHeight):
 
 
 def buildActivityStory(activityNumber, activity, styleMap, codeFontName, supportsUnicode, frameWidth, frameHeight):
-    fileName = os.path.basename(activity.sourcePath)
+    # fileName = os.path.basename(activity.sourcePath)
     story = [
         CondPageBreak(4 * cm),
-        Paragraph(f"Atividade {activityNumber} — {cleanParagraphText(fileName)}", styleMap["activityHeading"]),
+        # Paragraph(f"Atividade {activityNumber} — {cleanParagraphText(fileName)}", styleMap["activityHeading"]),
+        Paragraph(cleanParagraphText(buildActivityTitle(activityNumber, activity)), styleMap["activityHeading"]),
         Paragraph("Código-fonte", styleMap["sectionHeading"]),
         buildCodeTable(readSourceText(activity.sourcePath), codeFontName, supportsUnicode, frameWidth),
         Spacer(1, 10),

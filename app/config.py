@@ -6,6 +6,8 @@ from reportlab.lib.units import cm
 
 REPOSITORY_LINK = "github.com/TerraTheOnly/magelatorio"
 
+ACTIVITY_DEFAULT_LABEL = "Atividade"
+ACTIVITY_TITLE_SEPARATOR = " - "
 REPORT_DEFAULT_TITLE = "Relatório"
 
 PAGE_SIZE = A4

@@ -7,7 +7,7 @@ Aceita C, C++, Java, Python, entre várias outras linguagens. A lista completa d
 ## Manual de Uso
 
 1. Preencha o título da atividade, o nome do aluno, a disciplina, o nome do professor (opcionais) e adicione os arquivos de código. A ordem alfanumérica é aplicada, mas pode ser alterada com os botões *'Subir'*/*'Descer'*.
-2. Após prosseguir, o programa passará por cada um dos arquivos de código adicionados, dando a opção de anexar fotos/prints do output relacionadas ao código.
+2. Após prosseguir, o programa passará por cada um dos arquivos de código adicionados, dando a opção de dar um nome à atividade e de anexar fotos/prints do output relacionadas ao código.
    - *'Adicionar imagens…'* escolhe arquivos de imagem;
    - *'Colar da área de transferência'* (ou Ctrl+V) cola uma imagem da área de transferência.
    O usuário pode também pular essa etapa, deixando a parte de imagens no relatório em branco.
