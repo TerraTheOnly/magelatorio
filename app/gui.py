@@ -30,6 +30,8 @@ class ReportApp:
         self.previewPhoto = None
 
         root.title(WINDOW_TITLE)
+        root.iconbitmap('icon_mini.ico')
+        # root.iconbitmap("assets/icon_mini.ico")
         root.geometry(WINDOW_GEOMETRY)
         root.minsize(WINDOW_MIN_WIDTH, WINDOW_MIN_HEIGHT)
         root.report_callback_exception = self.handleCallbackError
